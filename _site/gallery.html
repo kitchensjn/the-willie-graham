@@ -84,6 +84,11 @@
                 transition: 0.2s;
             }
 
+            .grid-sizer {
+                width: 300px;
+                margin: 5px;
+            }
+
             .grid-item:hover {
                 text-decoration: none;
                 box-shadow: 0 6px 20px rgba(33, 37, 41, 0.5);
@@ -130,6 +135,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-2 col-md-0 col-sm-0"></div>
                     <div class="grid">
+                        <div class="grid-sizer"></div>
                         
                             <a href="assets/images/gallery/2018WJG0119_0014.jpg" class="grid-item" data-lightbox="" data-title="<h3>Cloverfields</h3><p>Built by Philemon Hemsley in 1704-05. William Hemsley improved the property in 1727-28 shortlybefore he patented the land in 1730. Brick, hall/parlor palan, two stories, with rear stair tower. Bent principal rafter roof. Clapboard cockloft. Clapboard roof sheathing. Foliated H hinges in attic. Attic flooring tulip poplar. In the late 1760s made into a double-pile, center-passage plan house. Eleaborate new woodwork, including plaster paneling, wood raised paneling, rococo consoles on sides of mantel, carved fretwork in the Chinese style in mantels, large scale moldings.</p><p>brick,masonry,glazed header,decorative brick,triple stack chimney,chimney,back building</p>" data-categories="cloverfields,brick,masonry,glazed header,decorative brick,triple stack chimney,chimney,back building">
                                 <img loading="lazy" src="assets/images/thumbnails/2018WJG0119_0014.jpg" alt="Cloverfields" height="200px" width="300px">
@@ -647,7 +653,8 @@
 
             $('.grid').masonry({
                 itemSelector: '.active',
-                fitWidth: true
+                fitWidth: true,
+                columnWidth: '.grid-sizer'
             });
         </script>
 

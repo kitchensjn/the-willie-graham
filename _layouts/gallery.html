@@ -84,6 +84,11 @@
                 transition: 0.2s;
             }
 
+            .grid-sizer {
+                width: 300px;
+                margin: 5px;
+            }
+
             .grid-item:hover {
                 text-decoration: none;
                 box-shadow: 0 6px 20px rgba(33, 37, 41, 0.5);
@@ -130,6 +135,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-2 col-md-0 col-sm-0"></div>
                     <div class="grid">
+                        <div class="grid-sizer"></div>
                         {% for image in site.data.gallery-metadata %}
                             <a href="{{ site.baseurl }}{{ image.path }}" class="grid-item" data-lightbox="" data-title="<h3>{{ image.location }}</h3><p>{{ image.description }}</p><p>{{ image.categories }}</p>" data-categories="{{ image.location | downcase }},{{ image.categories }}">
                                 <img loading="lazy" src="{{ site.baseurl }}{{ image.tpath }}" alt="{{ image.location }}" height="{{ image.theight }}px" width="{{ image.twidth }}px">
@@ -178,7 +184,8 @@
 
             $('.grid').masonry({
                 itemSelector: '.active',
-                fitWidth: true
+                fitWidth: true,
+                columnWidth: '.grid-sizer'
             });
         </script>
 
