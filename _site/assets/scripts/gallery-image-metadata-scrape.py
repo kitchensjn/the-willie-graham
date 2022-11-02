@@ -20,7 +20,7 @@ for image in images:
     path=image.replace("..", "assets")
     location=iptc.get((2, 92), empty).decode()
     headline=iptc.get((2, 105), empty).decode()
-    description=iptc.get((2, 120), empty).decode().replace('"', "'")
+    description=iptc.get((2, 120), empty).decode().replace("\r\r", " ").replace('<"\\r">', "").replace('"', "")#.replace("f'", "'").replace("\r\n", " ").replace("\n", " ")
     creator=iptc.get((2, 122), empty).decode()
     city=iptc.get((2, 90), empty).decode()
     state=iptc.get((2, 95), empty).decode()
@@ -29,16 +29,31 @@ for image in images:
     encoded_categories=iptc.get((2, 25), empty)
     categories = []
     for cat in encoded_categories:
-        categories.append(cat.decode().lower())
+        if type(cat) != int:
+            categories.append(cat.decode().lower())
+        else:
+            categories.append(str(cat))
     
-    img.thumbnail((300,300))
+    img.thumbnail((300,img.size[1]*(300/img.size[0])))
     thumbnail_width = str(img.size[0])
     thumbnail_height = str(img.size[1])
     thumbnail_path = path.replace("gallery", "thumbnails")
     img.save(thumbnail_path.replace("assets", ".."))
 
-
-
+    #if location == "Gripsholm Castle":
+        #print("path", path)
+        #print("tpath", thumbnail_path)
+        #print("twidth", thumbnail_width)
+        #print("theight", thumbnail_height)
+        #print("loc", location)
+        #print("headline", headline)
+        #print("desc", description)
+        #print("creator", creator)
+        #print("city", city)
+        #print("state", state)
+        #print("country", country)
+        #print("copy", copyright)
+        #print()
     dataFile.write("\t".join([path,thumbnail_path,thumbnail_width,thumbnail_height,location,headline,description,creator,city,state,country,copyright,",".join(categories)]) + "\n")
 
 dataFile.close()
