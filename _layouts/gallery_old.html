@@ -16,8 +16,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     
-        <link href="/assets/css/lightbox.css" rel="stylesheet" />
-
         <link rel="stylesheet" href="/assets/css/main.css">
     </head>
 
@@ -36,11 +34,9 @@
                     <li id="about" class="nav-item">
                         <a class="nav-link" href="#">about</a>
                     </li>
-                    <!--
                     <li id="portfolio" class="nav-item">
                         <a class="nav-link" href="#">portfolio</a>
                     </li>
-                    -->
                     <li id="gallery" class="nav-item">
                         <a class="nav-link" href="#">gallery</a>
                     </li>
@@ -70,7 +66,6 @@
                 align-items: center;
                 justify-content: center;
             }
-
             .grid-item:hover .card-overlay {
                 opacity: 1;
             }
@@ -80,36 +75,7 @@
                 box-shadow: 0 6px 20px rgba(33, 37, 41, 0.25);
                 margin: 5px;
                 overflow: hidden;
-                display: none;
-                transition: 0.2s;
             }
-
-            .grid-item:hover {
-                text-decoration: none;
-                box-shadow: 0 6px 20px rgba(33, 37, 41, 0.5);
-            }
-
-            .grid-item .card-text {
-                transition: 0.2s;
-            }
-
-            .grid-item:hover .card-text {
-                font-weight: bold;
-            }
-            
-            .active {
-                display: block;
-            }
-
-            .btn {
-                cursor: pointer;
-            }
-
-            /*
-            form input[type="text"] {
-                text-transform: lowercase;
-            }
-            */
 
         </style>
 
@@ -121,7 +87,7 @@
                     <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12">
                         <form>
                             <div class="input-group mb-3">
-                                <input name="categories" value="{{ cat }}" type="text" class="form-control" placeholder="ex. 'panel, fireplace'" aria-label="" aria-describedby="basic-addon1">
+                                <input name="tag" value="{{ cat }}" type="text" class="form-control" placeholder="ex. 'panel, fireplace'" aria-label="" aria-describedby="basic-addon1">
                                 <div class="input-group-prepend">
                                     <button class="btn btn-outline-secondary" type="submit">Search</button>
                                 </div>
@@ -131,12 +97,15 @@
                     <div class="col-xl-3 col-lg-2 col-md-0 col-sm-0"></div>
                     <div class="grid">
                         {% for image in site.data.gallery-metadata %}
-                            <a href="{{ site.baseurl }}{{ image.path }}" class="grid-item" data-lightbox="" data-title="<h3>{{ image.location }}</h3><p>{{ image.description }}</p><p>{{ image.categories }}</p>" data-categories="{{ image.location | downcase }},{{ image.categories }}">
-                                <img loading="lazy" src="{{ site.baseurl }}{{ image.tpath }}" alt="{{ image.location }}" height="{{ image.theight }}px" width="{{ image.twidth }}px">
-                                <div class="card-body">
-                                    <p class="card-text" style="color: #404040; font-size: 14px; text-align: center;">{{ image.location }}</p>
+                            {% if image.categories contains "" %}
+                                <div class="grid-item">
+                                    <div class="image-container" style="background-size: cover; background-image:url( {{ site.baseurl }}{{ image.tpath }} ); width: {{ image.twidth }}px; height: {{ image.theight }}px;"></div>
+                                    <div class="card-body">
+                                        <p class="card-text" style="font-size: 14px; text-align: center;">{{ image.location }}</p>
+                                    </div>
+                                    <a class="card-overlay" href="#"></a>
                                 </div>
-                            </a>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -144,50 +113,10 @@
         </div>
 
         <script>
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams != "") {
-                const active_cats = urlParams.get('categories');
-                const active_cats_array = active_cats.toLowerCase().replace(", ", ",").split(",");
-                if (active_cats_array != "") {
-                    document.getElementsByName('categories')[0].placeholder = active_cats;
-                    var queryString = "";
-                    for (var i = 0; i < active_cats_array.length; i++) {
-                        queryString += "[data-categories*='"+active_cats_array[i]+"']";
-                    }
-                    within_category = document.querySelectorAll(queryString);
-                    //within_category = document.querySelectorAll("."+active_cats_array.join("."));
-                    for(var i = 0; i < within_category.length; i++){
-                        //within_category[j].style.display = "block";
-                        within_category[i].classList.add("active");
-                        within_category[i].setAttribute("data-lightbox", "active");
-                    }
-                } else {
-                    const all_images = document.getElementsByClassName("grid-item");
-                    for (var i = 0; i < all_images.length; i++) {
-                        all_images[i].classList.add("active");
-                        all_images[i].setAttribute("data-lightbox", "active");
-                    }
-                }
-            } else {
-                const all_images = document.getElementsByClassName("grid-item");
-                for (var i = 0; i < all_images.length; i++) {
-                    all_images[i].classList.add("active");
-                    all_images[i].setAttribute("data-lightbox", "active");
-                }
-            }
-
             $('.grid').masonry({
-                itemSelector: '.active',
+                itemSelector: '.grid-item',
                 fitWidth: true
             });
-        </script>
-
-        <script src="assets/scripts/lightbox-plus-jquery.js"></script>
-
-        <script>
-            lightbox.option({
-              'wrapAround': true
-            })
         </script>
         
     </body>
