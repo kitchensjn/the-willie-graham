@@ -71,8 +71,9 @@
                 justify-content: center;
             }
 
-            .grid-item:hover .card-overlay {
-                opacity: 1;
+            .grid-sizer {
+                width: 300px;
+                margin: 5px;
             }
 
             .grid-item {
@@ -84,14 +85,19 @@
                 transition: 0.2s;
             }
 
-            .grid-sizer {
-                width: 300px;
-                margin: 5px;
-            }
-
             .grid-item:hover {
                 text-decoration: none;
                 box-shadow: 0 6px 20px rgba(33, 37, 41, 0.5);
+            }
+
+            .grid-item img {
+                transition: transform 0.2s;
+                overflow: hidden;
+                z-index: 1;
+            }
+
+            .grid-item:hover img {
+                transform: scale(1.05);
             }
 
             .grid-item .card-text {
@@ -138,7 +144,9 @@
                         <div class="grid-sizer"></div>
                         {% for image in site.data.gallery-metadata %}
                             <a href="{{ site.baseurl }}{{ image.path }}" class="grid-item" data-lightbox="" data-title="<h3>{{ image.location }}</h3><p>{{ image.description }}</p><p>{{ image.categories }}</p>" data-categories="{{ image.location | downcase }},{{ image.categories }}">
-                                <img loading="lazy" src="{{ site.baseurl }}{{ image.tpath }}" alt="{{ image.location }}" height="{{ image.theight }}px" width="{{ image.twidth }}px">
+                                <div style="height: {{ image.theight }}px; width: {{ image.twidth }}px; overflow: hidden;">
+                                    <img loading="lazy" src="{{ site.baseurl }}{{ image.tpath }}" alt="{{ image.location }}" height="" width="{{ image.twidth }}px">
+                                </div>
                                 <div class="card-body">
                                     <p class="card-text" style="color: #404040; font-size: 14px; text-align: center;">{{ image.location }}</p>
                                 </div>
