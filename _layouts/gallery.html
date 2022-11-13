@@ -56,21 +56,6 @@
                 margin: 0 auto;
             }
 
-            .card-overlay {
-                position: absolute;
-                top: 0px;
-                left: 0px;
-                height: 100%;
-                width: 100%;
-                background-color: rgba(67,129,149,0.55);
-                opacity: 0;
-                transition: 0.25s ease;
-                border-radius: 5px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
             .grid-sizer {
                 width: 300px;
                 margin: 5px;
@@ -104,12 +89,16 @@
                 transform: scale(1.05);
             }
 
-            .grid-item .card-text {
+            .card-body {
+                width: 300px;
+                background-color: #E5E6E3;
+                color: #404040;
                 transition: 0.2s;
             }
 
-            .grid-item:hover .card-text {
-                font-weight: bold;
+            .grid-item:hover .card-body {
+                background-color: #404040;
+                color: #E5E6E3;
             }
             
             .active {
@@ -147,13 +136,15 @@
                     <div class="grid">
                         <div class="grid-sizer"></div>
                         {% for image in site.data.gallery-metadata %}
-                            <a href="{{ site.baseurl }}{{ image.path }}" class="grid-item" data-lightbox="" data-title="{{ image.location }}, {{ image.city }}, {{ image.state}}, {{ image.country }}" data-categories="{{ image.location | downcase }},{{ image.categories }}">
+                            <a href="{{ site.baseurl }}{{ image.path }}" class="grid-item" data-lightbox="" data-title="{{ image.title }}, {{ image.location }}, {{ image.city }}, {{ image.state}}, {{ image.country }}" data-categories="{{ image.location | downcase }},{{ image.categories }}">
                                 <div style="height: {{ image.theight }}px; width: {{ image.twidth }}px; overflow: hidden;">
-                                    <img loading="lazy" src="{{ site.baseurl }}{{ image.tpath }}" alt="{{ image.location }}" height="" width="{{ image.twidth }}px">
+                                    <img loading="lazy" src="{{ site.baseurl }}{{ image.tpath }}" alt="{{ image.title }}" height="" width="{{ image.twidth }}px">
                                 </div>
-                                <div class="card-body">
-                                    <p class="card-text" style="color: #404040; font-size: 14px; text-align: center;">{{ image.location }}</p>
-                                </div>
+                                {% if image.title != nil %}
+                                    <div class="card-body">
+                                        <p class="card-text" style="font-size: 14px; text-align: center;">{{ image.title }}</p>
+                                    </div>
+                                {% endif %}
                             </a>
                         {% endfor %}
                     </div>

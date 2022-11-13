@@ -3,7 +3,7 @@ from PIL import Image, IptcImagePlugin
 
 dataFile = open("../../_data/gallery-metadata.tsv", "w")
 
-dataFile.write("path\ttpath\ttwidth\ttheight\tlocation\theadline\tdescription\tcreator\tcity\tstate\tcountry\tcopyright\tcategories\n")
+dataFile.write("path\ttpath\ttwidth\ttheight\ttitle\tlocation\theadline\tdescription\tcreator\tcity\tstate\tcountry\tcopyright\tcategories\n")
 
 images = glob.glob("../images/gallery/*")
 for image in images:
@@ -18,6 +18,7 @@ for image in images:
     #    date = "-".join([date[:4], date[4:6], date[6:]])
 
     path=image.replace("..", "assets")
+    title=iptc.get((2, 5), empty).decode().replace('"', "")
     location=iptc.get((2, 92), empty).decode()
     headline=iptc.get((2, 105), empty).decode()
     description=iptc.get((2, 120), empty).decode().replace("\r\r", " ").replace('<"\\r">', "").replace('"', "")#.replace("f'", "'").replace("\r\n", " ").replace("\n", " ")
@@ -54,7 +55,7 @@ for image in images:
         #print("country", country)
         #print("copy", copyright)
         #print()
-    dataFile.write("\t".join([path,thumbnail_path,thumbnail_width,thumbnail_height,location,headline,description,creator,city,state,country,copyright,",".join(categories)]) + "\n")
+    dataFile.write("\t".join([path,thumbnail_path,thumbnail_width,thumbnail_height,title,location,headline,description,creator,city,state,country,copyright,",".join(categories)]) + "\n")
 
 dataFile.close()
     
