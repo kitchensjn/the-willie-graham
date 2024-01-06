@@ -279,6 +279,7 @@
                     for (i = 0; i < terms.length; i++) {
                         /*create a DIV element for each matching element:*/
                         b = document.createElement("div");
+                        b.setAttribute("class", "search-term");
                         /*make the matching letters bold:*/
                         where = order[terms.indexOf(terms[i])];
                         b.innerHTML = terms[i].substr(0, where);
@@ -364,8 +365,9 @@
                 /*execute a function when someone clicks in the document:*/
                 document.addEventListener("click", function (e) {
                     closeAllLists(e.target);
-                    console.log(e.target);
-                    document.getElementById("search").focus();
+                    if (e.target.className == "search-term") {
+                        document.getElementById("search").focus();
+                    }
                 });
             }
 
