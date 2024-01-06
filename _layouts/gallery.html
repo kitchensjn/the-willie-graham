@@ -109,6 +109,43 @@
                 cursor: pointer;
             }
 
+            .search-bar {
+                display: flex;
+                flex-direction: row;
+            }
+
+            .autocomplete-items {
+                position: absolute;
+                border: 1px solid #d4d4d4;
+                border-bottom: none;
+                border-top: none;
+                z-index: 99;
+                /*position the autocomplete items to be the same width as the container:*/
+                top: 100%;
+                left: 0;
+                right: 0;
+                max-height: 200px;
+                overflow: scroll;
+            }
+
+            .autocomplete-items div {
+                padding: 10px;
+                cursor: pointer;
+                background-color: #fff; 
+                border-bottom: 1px solid #d4d4d4; 
+            }
+
+            .autocomplete-items div:hover {
+                /*when hovering an item:*/
+                background-color: #e9e9e9; 
+            }
+
+            .autocomplete-active {
+                /*when navigating through the items using the arrow keys:*/
+                background-color: DodgerBlue !important; 
+                color: #ffffff; 
+            }
+
             /*
             form input[type="text"] {
                 text-transform: lowercase;
@@ -122,10 +159,10 @@
             <div class="container" style="max-width: 100%; width: 100%;">
                 <div class="row justify-content-center">
                     <div class="col-xl-3 col-lg-2 col-md-0 col-sm-0"></div>
-                    <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12">
-                        <form>
-                            <div class="input-group mb-3">
-                                <input name="categories" value="{{ cat }}" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12 mb-3">
+                        <form id="search-terms">
+                            <div class="input-group search-bar">
+                                <input id="search" name="categories" value="{{ cat }}" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
                                 <div class="input-group-prepend">
                                     <button class="btn btn-outline-secondary" type="submit">Search</button>
                                 </div>
@@ -156,7 +193,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams != "") {
                 const active_cats = urlParams.get('categories');
-                const active_cats_array = active_cats.toLowerCase().replace(", ", ",").split(",");
+                const active_cats_array = active_cats.toLowerCase().replaceAll(", ", ",").split(",");
                 if (active_cats_array != "") {
                     document.getElementsByName('categories')[0].placeholder = active_cats;
                     var queryString = "";
@@ -200,7 +237,141 @@
               'disableScrolling': true
             })
         </script>
-        
+
+        <script>
+            var currentFocus = -1;
+            function autocomplete(inp, arr) {
+                /*the autocomplete function takes two arguments,
+                the text field element and an array of possible autocompleted values:*/
+                /*execute a function when someone writes in the text field:*/
+                inp.addEventListener("input", function(e) {
+                    var a, b, i, val = this.value;
+                    val = val.replaceAll(", ", ",").split(",")
+                    val = val[val.length-1];
+                    /*close any already open lists of autocompleted values*/
+                    closeAllLists();
+                    if (!val) { return false;}
+                    currentFocus = -1;
+                    /*create a DIV element that will contain the items (values):*/
+                    a = document.createElement("DIV");
+                    a.setAttribute("id", this.id + "autocomplete-list");
+                    a.setAttribute("class", "autocomplete-items");
+                    /*append the DIV element as a child of the autocomplete container:*/
+                    this.parentNode.appendChild(a);
+                    /*for each item in the array...*/
+                    var terms = [];
+                    var order = [];
+                    for (i = 0; i < arr.length; i++) {
+                        /*check if the item starts with the same letters as the text field value:*/
+                        var where = arr[i].toUpperCase().indexOf(val.toUpperCase());
+                        if (where != -1) {
+                            terms.push(arr[i]);
+                            order.push(where);
+                        }
+                    }
+                    var sorted = new Float32Array(order).sort();
+                    terms.sort(function(a, b){
+                        return sorted.indexOf(order[terms.indexOf(a)]) - sorted.indexOf(order[terms.indexOf(b)]);
+                    });
+                    order.sort(function(a, b){
+                        return sorted.indexOf(a) - sorted.indexOf(b);
+                    });
+                    for (i = 0; i < terms.length; i++) {
+                        /*create a DIV element for each matching element:*/
+                        b = document.createElement("div");
+                        /*make the matching letters bold:*/
+                        where = order[terms.indexOf(terms[i])];
+                        b.innerHTML = terms[i].substr(0, where);
+                        b.innerHTML += "<strong>" + terms[i].substr(where, val.length) + "</strong>";
+                        b.innerHTML += terms[i].substr(where+val.length);
+                        /*insert a input field that will hold the current array item's value:*/
+                        b.innerHTML += "<input type='hidden' value='" + terms[i] + "'>";
+                        /*execute a function when someone clicks on the item value (DIV element):*/
+                        b.addEventListener("click", function(e) {
+                            /*insert the value for the autocomplete text field:*/
+                            var current = inp.value.replaceAll(", ", ",").split(",");
+                            current.pop();
+                            current.push(this.getElementsByTagName("input")[0].value);
+                            inp.value = current.join(", ");
+                            /*close the list of autocompleted values,
+                            (or any other open lists of autocompleted values:*/
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    }
+                });
+
+                /*execute a function presses a key on the keyboard:*/
+                inp.addEventListener("keydown", function(e) {
+                    var x = document.getElementById(this.id + "autocomplete-list");
+                    if (x) x = x.getElementsByTagName("div");
+                    if (e.keyCode == 40) {
+                        /*If the arrow DOWN key is pressed,
+                        increase the currentFocus variable:*/
+                        currentFocus++;
+                        /*and and make the current item more visible:*/
+                        addActive(x);
+                    } else if (e.keyCode == 38) { //up
+                        /*If the arrow UP key is pressed,
+                        decrease the currentFocus variable:*/
+                        currentFocus--;
+                        /*and and make the current item more visible:*/
+                        addActive(x);
+                    } else if (e.keyCode == 13) {
+                        console.log(currentFocus);
+                        if (currentFocus == -1) {
+                            document.getElementById("search-terms").submit();
+                        } else {
+                            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                            e.preventDefault();
+                            if (currentFocus > -1) {
+                                /*and simulate a click on the "active" item:*/
+                                if (x) x[currentFocus].click();
+                                currentFocus = -1;
+                            }
+                        }
+                    }
+                });
+
+                function addActive(x) {
+                    /*a function to classify an item as "active":*/
+                    if (!x) return false;
+                    /*start by removing the "active" class on all items:*/
+                    removeActive(x);
+                    if (currentFocus >= x.length) currentFocus = 0;
+                    if (currentFocus < 0) currentFocus = (x.length - 1);
+                    /*add class "autocomplete-active":*/
+                    x[currentFocus].classList.add("autocomplete-active");
+                }
+
+                function removeActive(x) {
+                    /*a function to remove the "active" class from all autocomplete items:*/
+                    for (var i = 0; i < x.length; i++) {
+                        x[i].classList.remove("autocomplete-active");
+                    }
+                }
+
+                function closeAllLists(elmnt) {
+                    /*close all autocomplete lists in the document,
+                    except the one passed as an argument:*/
+                    var x = document.getElementsByClassName("autocomplete-items");
+                    for (var i = 0; i < x.length; i++) {
+                        if (elmnt != x[i] && elmnt != inp) {
+                            x[i].parentNode.removeChild(x[i]);
+                        }
+                    }
+                }
+                /*execute a function when someone clicks in the document:*/
+                document.addEventListener("click", function (e) {
+                    closeAllLists(e.target);
+                    console.log(e.target);
+                    document.getElementById("search").focus();
+                });
+            }
+
+            autocomplete(document.getElementById("search"), ['chandelier', 'cupola', 'forge', 'fire fighter', 'batten', 'hewn', 'sheath', 'starp hinge', 'door leaf', 'orangery', 'södermalm', 'chicken', 'pintle', 'newel post', 'chesapeake house project', 'dirt', 'greenhouse', 'decorative brick', 'stable', 'half story', 'pier', 'roof', 'blind window', 'shutter', 'double crib', 'handle', 'v notch', 'frame', 'water', 'slave quarter', 'fret', 'masonry', 'bent principal', 'greek', 'hasp', 'open string stair', 'psalms', 'drop', 'street', 'brice', 'baroque frontispiece', 'jamb', 'glazed brick', 'yellow ochre', 'log dwelling', 'outbuilding', 'wagon', 'crate', 'dining room', 'weatherboard', 'castle', 'summer house', 'club', 'leather', 'dutch gable', 'brickwork', 'greek key', 'sounding board', 'archaeology', 'round log', 'psalms 37', 'eaves', 'wainscot', 'order', 'hand forge', 'horry parker', 'rat tail hinge', 'goat', 'rafter', 'dome', 'drawing', 'clapboard', 'log smokehouse', 'ionic', 'porch', 'reredos', 'garden building', 'tar', 'rail', 'wainscoting', 'principal rafter', 'thumb latch', 'balustrade', 'gable', 'ochre', 'exposed frame', 'gothic', 'casement', 'belt course', 'pediment', 'rooster', 'shingle', '115', 'hip on hip', 'city view', 'shadow mold', 'graffiti', 'ice tongs', 'house of nobility', 'belfry', 'hand forged strap hinge', 'chinese chippendale', 'mason', 'tie rod', 'bench', 'hearth', 'bolection', 'interior', 'armature', 'slave house', '101', 'modilliion', 'dwelling', 'curtail', 'lap', 'corner board', '99', 'farmyard', 'green roof', 'board and batten door', 'timber frame', 'paneling', 'lhalf story 1 1/2 story', 'truss', 'fieldnotes', 'carving', 'mutton', 'ten commandments', 'kitchen', 'barn', 'joinery', 'lead', 'hew', 'firebox', 'window', 'marcia forman', 'crib', 'ornament', 'stringcourse', '17th century', 'enslave', 'timber framel bench', 'manor', 'finial', 'anglican', 'john fitzhugh may', 'james brice', 'side passage', 'reconstruction', 'pattern book', 'ens', 'archaeologist', 'horse', 'hatchment', 'dwellings', 'tower', 'shadow molding', 'foliated h hinge', 'lintel', 'stove', 'door', 'square', 'enslaved', 'balcony', 'smokehouse', 'otto sutto', 'color wash', 'stone paver', 'rive', 'palladian window', 'complex', 'goose', 'log house', 'plate', 'farm', 'board partition', 'mid 19th century', 'villa', 'fireplace', 'street lamp', 'old town', 'footing', 'fish oil', 'articluated', 'rose head nail', 'stair case', 'acorn', 'south river clubhouse', 'fireman', 'church', 'hip', 'capital', 'strap hinge', 'table', 'dutch gable stone', 'leaf', 'aved', 'rafter tail', 'shipping crate', 'lamp', 'lattice', 'chalk', 'artisan mannerist', '1 1/2 story', 'ground penetrating radar', 'rib', 'casement window', 'wood', 'floor', 'articulated frame', 'quarter', 'royal crest', 'ladderback chair', 'wrought iron', 'date', 'slave', 'overdoor', 'header', 'baroque doorway', 'step', 'riven', 'fitting', 'chapel', 'doorjamb', 'bead', 'arch', 'dairy', 'clumn', 'ceiling', 'hang', 'gpr', 'acoorn', 'thatch roof', 'rat tail', 'ladder', 'cellar window', 'pavilion', 'john banister.', 'candle chandelier', 'lath', 'sheathing', 'notch', 'crippled stud', 'curvilinear gable', 'baord and batten', 'vent', 'qouin', 'corn house', 'light', 'architecture', 'bracket', 'corinthian', 'night', 'ladder stair', 'paint', 'chimney', '5 part house', 'joint', 'piano', 'all glazed header flemish bond', 'bell flower', "lord's prayer", 'post', 'outdoor history musuem', 'board and batten', 'glaze', 'ogee', 'armoury', 'doric order', 'gable stone', 'chinese lattice', '116', 'stud', '97', 'common rafter', 'greek revival', 'garrett', 'well', 'armory', 'hook', 'mortar', 'john banister', 'broken pediment', 'city hall', 'log quarter', 'brick patterned stucco', 'flooring', 'limestone', 'column', 'organ', 'cornerboard', 'kevin nieto', 'chair', 'struck joint', 'coat of arms', 'joist', 'hipped roof', 'stall', 'chinese', 'plaster', 'drive through', 'stucco to resemble brick', 'svea court of appeal', 'box pew', 'gilt', 'door sill', 'chinese lattice stair', 'wrougght iron', 'flashing', 'baltrade', 'wood shingle', 'lead flashing', 'cast iron', 'garden', 'sheep', 'flush sheathing', 'seward luggage factory', 'house', 'log stair', 'stucco', 'shell mortar', 'geese', 'altar', 'ridge beam', 'packing crate', 'water view', 'bent principal rafter', 'cockloft', 'tester', '3 panel door', 'sound board', 'government', 'triple stack chimney', 'circle head', 'decorative paint', 'farmstead', 'robert hall', 'red brown', 'winder', 'loft', 'steinway', 'brick', 'scroll', 'cover roof', 'aisle', 'half lap', 'cyma', 'back building', 'collar', 'doorway', 'court of appeal', 'limewash', 'fire', 'tablet', 'red', '108', 'south river club', 'cold store', 'foliated', 'ice', 'anne arundel county', 'mill sawn', 'carve', 'moon', 'forman', 'strut supported purlin', 'nightime', 'staircase', 'articluated frame', 'handrail', 'panel', 'doric', 'museum', 'altar rail', 'alter', 'baluster', 'transom', 'english bond', 'stair bracket', 'log', 'shingle lath', 'attic', "circular saw' circular sawn", 'manger', 'stack', 'corn', 'pelican', 'vault', 'interior finish', 'merchant house', 'candle', 'dormer', 'sandstone', "ladder back chair' ladderback", 'entry', 'hinge', 'scrolled pediment', 'clay floor', 'dirt floor', 'stockholm', 'half story 1 1/2 story', 'glazed header', 'flemish bond', 'corinthian capital', 'palladian', 'lock', 'paver', 'ridge', 'sash', 'tile', 'slavehouse', 'stair', 'articulated', 'seneca sandstone', 'arm chair', 'frontispiece', 'spread footing', 'pulpit', 'stringcoruse', 'fountain', 'cellar', 'newel', 'crest', 'steps', 'brace', 'foundation', 'pew', 'medieval', 'yellow', 'decorative plaster', 'eye', 'enslave quarter', 'purlin', 'cornice', 'stone', 'corinthian order', 'corn crib', 'tongs', 'open string', 'episcopal', 'tie beam', 'factory', 'pineapple', 'guest wing', 'saw', 'maryland', 'chippendale', 'carriage house', 'facade', 'tool', 'spire', 'restoration', 'candelabra', 'one and a half story', 'baroque', 'hand rail', 'lime mortar', 'venetian window', 'wooden hook', 'wellhead', 'h hinge', 'one and one half story', 'garret', 'entablature']);
+        </script>
+
     </body>
 
 </html>
