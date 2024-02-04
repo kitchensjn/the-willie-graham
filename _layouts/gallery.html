@@ -123,14 +123,6 @@
                 color: #ffffff; 
             }
 
-            .lightbox {
-                position: fixed;
-            }
-
-            .lightboxOverlay {
-                position: fixed;
-            }
-
             /*
             form input[type="text"] {
                 text-transform: lowercase;
@@ -141,7 +133,7 @@
 
         {%- include navbar.html -%}
 
-        <div class="py-5 px-3" style="position: relative; top: 63px;">
+        <div class="py-5 px-3" style="position: relative; top: 63px; margin-bottom: 1000px;">
             <div class="container" style="max-width: 100%; width: 100%;">
                 <div class="row justify-content-center">
                     <div class="col-xl-3 col-lg-2 col-md-0 col-sm-0"></div>
@@ -159,7 +151,7 @@
                     <div class="grid">
                         <div class="grid-sizer"></div>
                         {% for image in site.data.gallery-metadata %}
-                            <a href="{{ site.baseurl }}{{ image.path }}" class="grid-item" data-lightbox="" data-title="{{ image.title }}, {{ image.location }}, {{ image.city }}, {{ image.state}}, {{ image.country }}" data-categories="{{ image.location | downcase }},{{ image.categories }}">
+                            <a href="{{ site.baseurl }}{{ image.path }}" class="grid-item" data-lightbox="" data-html="true" data-title="Title: {{ image.title }}<br><br>Description: {{ image.description }}<br><br>Location: {{ image.location }}<br><br>City: {{ image.city }}<br><br>State: {{ image.state}}<br><br>Country: {{ image.country }}<br><br>Categories: {{ image.categories | replace: ',', ', '}}" data-categories="{{ image.location | downcase }},{{ image.categories }}">
                                 <div style="height: {{ image.theight }}px; width: {{ image.twidth }}px; overflow: hidden;">
                                     <img loading="lazy" src="{{ site.baseurl }}{{ image.tpath }}" alt="{{ image.title }}" height="" width="{{ image.twidth }}px">
                                 </div>
@@ -220,7 +212,7 @@
         <script>
             lightbox.option({
               'wrapAround': true,
-              'disableScrolling': true
+              //'disableScrolling': true
             })
         </script>
 
