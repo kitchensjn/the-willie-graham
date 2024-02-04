@@ -16,7 +16,16 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     
+
+
+        <link rel="stylesheet" href="/assets/glightbox/dist/css/glightbox.css" />
+        <script src="/assets/glightbox/dist/js/glightbox.js"></script>
+
+        <!--
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+        <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
         <link href="/assets/css/lightbox.css" rel="stylesheet" />
+        -->
 
         <link rel="stylesheet" href="/assets/css/main.css">
     </head>
@@ -151,7 +160,10 @@
                     <div class="grid">
                         <div class="grid-sizer"></div>
                         {% for image in site.data.gallery-metadata %}
-                            <a href="{{ site.baseurl }}{{ image.path }}" class="grid-item" data-lightbox="" data-html="true" data-title="Title: {{ image.title }}<br><br>Description: {{ image.description }}<br><br>Location: {{ image.location }}<br><br>City: {{ image.city }}<br><br>State: {{ image.state}}<br><br>Country: {{ image.country }}<br><br>Categories: {{ image.categories | replace: ',', ', '}}" data-categories="{{ image.location | downcase }},{{ image.categories }}">
+                            <a href="{{ site.baseurl }}{{ image.path }}" class="grid-item glightbox" data-gallery="gallery"
+                                data-title="{{ image.title }}"
+                                data-description="Description: {{ image.description }}<br><br>Location: {{ image.location }}<br><br>City: {{ image.city }}<br><br>State: {{ image.state}}<br><br>Country: {{ image.country }}<br><br>Categories: {{ image.categories | replace: ',', ', '}}"
+                                data-categories="{{ image.location | downcase }},{{ image.categories }}">
                                 <div style="height: {{ image.theight }}px; width: {{ image.twidth }}px; overflow: hidden;">
                                     <img loading="lazy" src="{{ site.baseurl }}{{ image.tpath }}" alt="{{ image.title }}" height="" width="{{ image.twidth }}px">
                                 </div>
@@ -207,6 +219,11 @@
             });
         </script>
 
+        <script type="text/javascript">
+            const lightbox = GLightbox();
+        </script>
+
+        <!--
         <script src="/assets/scripts/lightbox-plus-jquery.js"></script>
 
         <script>
@@ -215,6 +232,7 @@
               //'disableScrolling': true
             })
         </script>
+        -->
 
         <script>
             var currentFocus = -1;
