@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{%- include head.html -%}
+
+<body>
+
+<style>
+    .carousel-image {
+        width: 100vw;
+        height: 90vh; 
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .slick-dots {
+        top: 95%;
+        left: 0px;
+    }
+
+    .slick-dots li button:before {
+        color: white !important;
+        font-size: 15px !important;
+        line-height: 15px !important;
+    }
+
+    .slick-dots li button:focus:before { 
+        opacity: 0.25;
+    }
+
+    .slick-dots li.slick-active button:focus:before,  .slick-dots li button:hover:before { 
+        opacity: 1;
+    }
+</style>
+
+{%- include navbar.html -%}
+
+<div class="background-carousel" style="width: 100%; height: 100%; margin: 0px; padding: 0px; overflow: hidden; background-color: #404040;">
+    {% for image in site.static_files %}
+        {% if image.path contains 'images/home/carousel' %}
+            <img class="carousel-image" style="background-image:url({{ image.path }});" />
+        {% endif %}
+    {% endfor %}
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $('.background-carousel').slick({
+            infinite: true,
+            dots: true,
+            arrows: false,
+            autoplay: true,
+            autoplaySpeed: 7000,
+            speed: 1000,
+            pauseOnHover:false,
+            focus: false,
+            pauseOnFocus: false,
+            fade: true
+        });
+    });
+
+</script>
+
+<style>
+
+    #top {
+        display: table;
+        width: 100%;
+        padding: 5%;
+        background-color: #e5e6e3;
+    }
+
+    #top #half-left {
+        display: table-cell;
+        width: 50%;
+        background-image: url("assets/images/home/bio/2010JRO1004004.jpg");
+        background-position: center;
+        background-size: cover;
+    }
+
+    #top #half-right {
+        display: table-cell;
+        width: 50%;
+        min-height: 100%;
+    }
+
+    #top #half-right #bio {
+        width: 100%;
+        margin-bottom: 150px;
+        background-color: #438195;
+        padding: 20px;
+        color: #e5e6e3;
+    }
+
+    #top #half-right #bio h2 {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    #top #half-right #bio hr {
+        border: 1.5px solid #e5e6e3;
+    }
+
+    #top #half-right #bio p {
+        font-size: 18px;
+        margin: 0px;
+    }
+    
+    #bottom {
+        position: relative;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        background-color: #404040;
+        width: 100%;
+        height: 75vw;
+        padding: 0% 5% 5% 5%;
+    }
+
+    #bottom #half-left {
+        width: 45%;
+        height: 100%;
+    }
+
+    #bottom #half-left #quad-top {
+        height: 50%;
+        width: 100%;
+        padding-right: 10px;
+        padding-bottom: 10px;
+    }
+
+    #bottom #half-left #quad-top #mantle {
+        width: 100%;
+        height: 100%;
+        background-image: url("assets/images/home/bio/2014wjg1001_0160.jpg");
+        background-position: center;
+        background-size: cover;
+    }
+
+    #bottom #half-left #quad-bottom {
+        height: 50%;
+        width: 100%;
+        padding-right: 10px;
+        padding-top: 10px;
+    }
+
+    #bottom #half-left #quad-bottom #house {
+        position: relative;
+        left: 20%;
+        width: 80%;
+        height: 100%;
+        background-image: url("assets/images/home/bio/Fig10-21A.jpg");
+        background-position: center;
+        background-size: cover;
+    }
+
+    #bottom #half-right {
+        position: relative;
+        width: 55%;
+        height: 100%;
+    }
+
+    #bottom #half-right #quad-top {
+        margin-left: 15%;
+        width: 85%;
+        margin-top: -175px;
+        height: 30%;
+    }
+
+    #bottom #half-right #quad-top #room {
+        position: relative;
+        z-index: 1;
+        margin: 0%;
+        width: 100%;
+        height: 150%;
+        background-image: url("assets/images/home/bio/Ile aux Marins w rock grave 1 600 dpi.jpg");
+        background-position: center;
+        background-size: cover;
+    }
+
+    #bottom #half-right #quad-bottom {
+        width: 100%;
+        height: 60%;
+        padding-left: 10px;
+    }
+
+    #bottom #half-right #quad-bottom #box {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        top: 25%;
+    }
+    #bottom #half-right #quad-bottom #box #stones {
+        width: 100%;
+        height: 100%;
+        margin-top: 20px;
+        background-image: url("assets/images/home/bio/Fig13-02.jpg"); 
+        background-position: center;
+        background-size: cover;
+    }
+    
+    .headline {
+        position: absolute; 
+        background-color: #438195;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .headline p {
+        margin: 0px;
+        font-size: 30px;
+        color: #e5e6e3;
+    }
+
+    #headline-4 {
+        display: none;
+    }
+
+    @media screen and (max-width: 1000px) {
+        #top #half-left {
+            display: block;
+            width: 100%;
+            height: 500px;
+        }
+        #top #half-right {
+            display: block;
+            width: 100%; 
+        }
+        #top #half-right #bio {
+            margin: 0px;
+        }
+
+        #bottom {
+            display: block;
+            height: 2500px;
+            padding: 0px;
+        }
+
+        #bottom #half-left {
+            width: 100%;
+            height: 50%;
+        }
+
+        #bottom #half-left #quad-top {
+            height: 50%;
+            width: 100%;
+            padding: 0px;
+            padding: 5% 5% 2.5% 5%;
+        }
+
+        #bottom #half-left #quad-bottom {
+            height: 50%;
+            width: 100%;
+            padding: 0px;
+            padding: 2.5% 5%;
+        }
+        #bottom #half-left #quad-bottom #house {
+            left: 0%;
+            width: 100%;
+        }
+
+
+        #bottom #half-right {
+            width: 100%;
+            height: 50%;
+        }
+
+        #bottom #half-right #quad-top {
+            width: 100%;
+            margin: 0px;
+            height: 50%;
+            padding: 2.5% 5%;
+        }
+
+        #bottom #half-right #quad-top #room {
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+        }
+
+        #bottom #half-right #quad-bottom {
+            padding: 0px;
+            height: 50%;
+            padding: 2.5% 5% 5% 5%;
+        }
+
+        #bottom #half-right #quad-bottom #box {
+            height: 100%;
+            top: 0%;
+        }
+        #bottom #half-right #quad-bottom #box #stones {
+            margin: 0px;
+        }
+
+        #headline-1 {
+            display: block;
+            position: absolute;
+            top: 25%;
+            z-index: 10;
+        }
+
+        #headline-2 {
+            display: none;
+        }
+
+        #headline-3 {
+            z-index: 10;
+        }
+
+        #headline-4 {
+            display: block;
+            position: absolute;
+            top: 75%;
+            z-index: 10;
+        }
+
+    }
+
+</style>
+
+    <div id="top">
+        <div id="half-left" class="fade-in"></div>
+        <div id="half-right">
+            <div id="bio">
+                <h2>An independent historic architecture firm located in Midlothian, Virginia.</h2>
+                <hr></hr>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et erat vel nibh laoreet ultrices id in sapien. Curabitur felis purus, volutpat in risus posuere, hendrerit tempus lacus. Praesent sed enim sit amet nisl porttitor placerat. Maecenas vulputate purus lacus. Cras sit amet tortor consectetur, varius lorem id, dapibus mauris. Nunc porta ligula ut ipsum sagittis, ac imperdiet augue tincidunt. Aliquam vulputate molestie libero, quis mattis quam efficitur non. Maecenas molestie justo odio, dignissim consequat sem ultricies non. Vestibulum nec augue in nunc varius cursus vitae sed nibh. Phasellus porta odio quam, dignissim lobortis dolor congue at. Ut placerat, dui eget accumsan lobortis, odio ante rhoncus tellus, ut faucibus purus lacus vitae sapien. Curabitur et semper justo. Praesent pharetra nibh facilisis, tincidunt leo nec, ultrices odio. Nullam pulvinar, sem sed venenatis consequat, lectus mauris tempor libero, id hendrerit orci orci in nisl. Nam pharetra nisi eu libero lobortis, ut pretium mi auctor. Curabitur semper eros a nibh bibendum tempus. Maecenas elementum nisi a rutrum placerat. Ut finibus imperdiet aliquam. Mauris elit purus, viverra at turpis sit amet, rhoncus lobortis urna. Vivamus viverra ullamcorper iaculis. Vivamus a purus vel arcu varius sagittis quis sed arcu. Phasellus bibendum nibh eget orci pellentesque ultricies.</p>
+            </div>
+        </div>
+    </div>
+    <div id="bottom">
+        <div id="half-left">
+            <div id="quad-top">
+                <div id="mantle" class="fade-in"></div>
+            </div>
+            <div id="quad-bottom">
+                <div id="house" class="fade-in"></div>
+            </div>
+        </div>
+        <div id="half-right">
+            <div id="quad-top">
+                <div id="room" class="fade-in"></div>
+                <div id="headline-2" class="headline" style="position: relative; z-index: 2; top: 10%;">
+                    <p>documentary photography</p>
+                </div>
+            </div>
+            <div id="quad-bottom">
+                <div id="box">
+                    <div id="stones" class="fade-in"></div>
+                </div>
+            </div>
+        </div>
+        <div id="headline-1" class="headline">
+            <p>incredible design</p>
+        </div>
+        <div id="headline-3" class="headline">
+            <p>innovative historic restoration & recreation</p>
+        </div>
+        <div id="headline-4" class="headline">
+            <p>documentary photography</p>
+        </div>
+    </div>
+
+    {%- include footer.html -%}
+
+    </body>
+
+<script>
+    document.getElementById("home").classList.add("active");
+</script>
+</html>

@@ -110,7 +110,7 @@ body {
 }
 
 .glightbox-clean .gslide-description {
-    background-color:black;
+    background-color: transparent;
     color: #FFF;
     text-align: center;
 }
