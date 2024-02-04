@@ -105,6 +105,10 @@ body {
     
 }
 
+.gslide-description.description-bottom {
+    margin-top: 10px;
+}
+
 .glightbox-clean .gslide-description {
     background-color:black;
     color: #FFF;
