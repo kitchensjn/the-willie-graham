@@ -100,6 +100,7 @@ body {
 
 .gslide-description {
     max-height: 200px;
+    max-width: 1000px;
     overflow-y: scroll;
     
 }
@@ -107,6 +108,7 @@ body {
 .glightbox-clean .gslide-description {
     background-color:black;
     color: #FFF;
+    text-align: center;
 }
 
 .glightbox-clean .gslide-title {

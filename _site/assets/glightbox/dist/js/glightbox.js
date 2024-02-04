@@ -3391,7 +3391,7 @@
             var descHeight = description.offsetHeight;
             var _imgNode = image.querySelector('img');
             _imgNode.setAttribute('style', "max-height: calc(100vh - ".concat(descHeight, "px)"));
-            description.setAttribute('style', "max-width: ".concat(_imgNode.offsetWidth, "px;"));
+            //description.setAttribute('style', "max-width: ".concat(_imgNode.offsetWidth, "px;"));
           }
         }
 

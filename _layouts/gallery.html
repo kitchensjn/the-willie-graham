@@ -163,8 +163,7 @@
                             <a href="{{ site.baseurl }}{{ image.path }}" class="grid-item glightbox" data-gallery="gallery"
                                 data-title="{{ image.title }}"
                                 data-description="Description: {{ image.description }}<br><br>Location: {{ image.location }}<br><br>City: {{ image.city }}<br><br>State: {{ image.state}}<br><br>Country: {{ image.country }}<br><br>Categories: {{ image.categories | replace: ',', ', '}}"
-                                data-categories="{{ image.location | downcase }},{{ image.categories }}"
-                                data-width=" {{ image.width }} ">
+                                data-categories="{{ image.location | downcase }},{{ image.categories }}">
                                 <div style="height: {{ image.theight }}px; width: {{ image.twidth }}px; overflow: hidden;">
                                     <img loading="lazy" src="{{ site.baseurl }}{{ image.tpath }}" alt="{{ image.title }}" height="" width="{{ image.twidth }}px">
                                 </div>
